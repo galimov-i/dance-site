@@ -1,3 +1,5 @@
+import DOMPurify from 'isomorphic-dompurify'
+
 interface BlogPostProps {
   post: {
     id: number
@@ -23,7 +25,7 @@ export default function BlogPost({ post }: BlogPostProps) {
         </div>
         <div
           className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
         />
       </div>
     </article>
