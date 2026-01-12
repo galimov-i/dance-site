@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timedelta, timezone
 from app.database import get_db
@@ -68,7 +69,7 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
         )
     
     # Create new user
-    hashed_password = get_password_hash(user_data.password)
+    hashed_password = await run_in_threadpool(get_password_hash, user_data.password)
     new_user = User(
         email=user_data.email,
         phone=user_data.phone,
@@ -91,7 +92,7 @@ async def login(
     """Login and get access token."""
     user = await get_user_by_email(db, form_data.username)
     
-    if not user or not verify_password(form_data.password, user.password_hash):
+    if not user or not await run_in_threadpool(verify_password, form_data.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",

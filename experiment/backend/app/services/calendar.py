@@ -98,7 +98,10 @@ class CalendarService:
         try:
             # Run synchronous Google API call in thread pool to avoid blocking
             import asyncio
-            loop = asyncio.get_event_loop()
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = asyncio.get_event_loop()
             
             def fetch_events():
                 return self.service.events().list(
