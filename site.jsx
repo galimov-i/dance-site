@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // Custom creative icons instead of lucide-react (остаются без изменений)
 const CreativePhone = ({ className }) => (
@@ -293,11 +293,7 @@ export default function App() {
   const [formData, setFormData] = useState({ name: '', phone: '', style: '', time: '' });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
   const [navBackground, setNavBackground] = useState('transparent');
-  
-  // Scroll effects
-  const { scrollYProgress } = useScroll();
   
   useEffect(() => {
     const updateNavBackground = () => {
@@ -310,33 +306,24 @@ export default function App() {
     return () => window.removeEventListener('scroll', updateNavBackground);
   }, []);
   
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['hero', 'styles', 'pricing', 'about', 'contacts'];
+      const scrollPosition = window.scrollY + 100;
+      
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element && scrollPosition >= element.offsetTop && scrollPosition < element.offsetTop + element.offsetHeight) {
+          setActiveSection(section);
+          break;
+        }
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const handleScroll = () => {
-    const sections = ['hero', 'styles', 'pricing', 'about', 'contacts'];
-    const scrollPosition = window.scrollY + 100;
-    
-    for (const section of sections) {
-      const element = document.getElementById(section);
-      if (element && scrollPosition >= element.offsetTop && scrollPosition < element.offsetTop + element.offsetHeight) {
-        setActiveSection(section);
-        break;
-      }
-    }
-  };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -546,7 +533,7 @@ export default function App() {
                     Танцуйте уверенно
                   </span>
                 </span>
-                <span className="block text-gray-200 font-black">уже через месяц</span> {/* Изменен цвет текста на светлый */}
+                <span className="block text-gray-800 font-black">уже через месяц</span>
                 <span className="block text-[#13C296] mt-1 text-lg font-medium">с нашими профессиональными тренерами</span>
               </motion.h1>
               
@@ -554,7 +541,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl mx-auto px-2" /* Изменен цвет текста на светлый */
+                className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto px-2"
               >
                 Индивидуальные уроки бачаты, сальсы и кизомбы для начинающих без опыта. Занимайтесь в комфортной обстановке в центре Москвы.
               </motion.p>
@@ -586,21 +573,21 @@ export default function App() {
               >
                 <div className="text-center">
                   <div className="text-2xl sm:text-3xl font-bold text-[#6C4BFF] mb-1">350+</div>
-                  <div className="text-gray-200 font-medium text-sm sm:text-base">учеников</div> {/* Изменен цвет текста на светлый */}
+                  <div className="text-gray-600 font-medium text-sm sm:text-base">учеников</div>
                 </div>
                 
                 <div className="hidden sm:block w-1 h-6 sm:h-8 bg-gradient-to-b from-[#6C4BFF] to-[#FF4B91] rounded-full"></div>
                 
                 <div className="text-center">
                   <div className="text-2xl sm:text-3xl font-bold text-[#FF4B91] mb-1">8 лет</div>
-                  <div className="text-gray-200 font-medium text-sm sm:text-base">опыта</div> {/* Изменен цвет текста на светлый */}
+                  <div className="text-gray-600 font-medium text-sm sm:text-base">опыта</div>
                 </div>
                 
                 <div className="hidden sm:block w-1 h-6 sm:h-8 bg-gradient-to-b from-[#6C4BFF] to-[#FF4B91] rounded-full"></div>
                 
                 <div className="text-center">
                   <div className="text-2xl sm:text-3xl font-bold text-[#13C296] mb-1">98%</div>
-                  <div className="text-gray-200 font-medium text-sm sm:text-base">удовлетворенности</div> {/* Изменен цвет текста на светлый */}
+                  <div className="text-gray-600 font-medium text-sm sm:text-base">удовлетворенности</div>
                 </div>
               </motion.div>
             </motion.div>
@@ -609,8 +596,8 @@ export default function App() {
           {/* Mobile-optimized dance cards */}
           <div className="mt-12 sm:mt-16">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-white mb-2">Стили танцев</h2> {/* Изменен цвет текста на белый */}
-              <p className="text-gray-200 max-w-2xl mx-auto">Выберите направление, которое подойдет именно вам</p>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Стили танцев</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">Выберите направление, которое подойдет именно вам</p>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-6 max-w-5xl mx-auto px-2">
@@ -684,19 +671,21 @@ export default function App() {
                   onClick={() => setSelectedStyle(style.id)}
                   className={`flex flex-col items-center justify-center min-w-[120px] px-4 py-3 mx-1 rounded-xl transition-all ${
                     selectedStyle === style.id
-                      ? `bg-gradient-to-r from-${style.color}-500 to-${style.color}-600 text-white shadow-md`
+                      ? 'text-white shadow-md'
                       : 'bg-white/80 hover:bg-white'
                   }`}
                   style={{ 
+                    background: selectedStyle === style.id ? `linear-gradient(to right, ${style.color}, ${style.color}dd)` : undefined,
                     boxShadow: selectedStyle === style.id ? `0 4px 6px ${style.color}20` : 'none'
                   }}
                 >
-                  <div className={`w-10 h-10 rounded-full mb-2 flex items-center justify-center ${
-                    selectedStyle === style.id ? 'bg-white/20' : `bg-${style.color}-100`
-                  }`}>
-                    <span className={`text-xl ${
-                      selectedStyle === style.id ? 'text-white' : `text-${style.color}-600`
-                    }`}>💃</span>
+                  <div 
+                    className="w-10 h-10 rounded-full mb-2 flex items-center justify-center"
+                    style={{
+                      backgroundColor: selectedStyle === style.id ? 'rgba(255,255,255,0.2)' : `${style.color}20`
+                    }}
+                  >
+                    <span className="text-xl" style={{ color: selectedStyle === style.id ? 'white' : style.color }}>💃</span>
                   </div>
                   <span className="font-medium text-sm">{style.name}</span>
                 </button>
@@ -712,10 +701,11 @@ export default function App() {
                 onClick={() => setSelectedStyle(style.id)}
                 className={`px-6 py-3 m-1 rounded-full font-bold text-lg transition-all ${
                   selectedStyle === style.id
-                    ? `bg-gradient-to-r from-${style.color}-500 to-${style.color}-600 text-white shadow-lg`
+                    ? 'text-white shadow-lg'
                     : 'bg-white/50 backdrop-blur-sm text-gray-700 hover:bg-white/80 hover:text-gray-900'
                 }`}
                 style={{ 
+                  background: selectedStyle === style.id ? `linear-gradient(to right, ${style.color}, ${style.color}dd)` : undefined,
                   boxShadow: selectedStyle === style.id ? `0 10px 15px -3px ${style.color}40` : 'none'
                 }}
               >
@@ -778,7 +768,10 @@ export default function App() {
                         'Помогает преодолеть скованность в движениях'
                       ].map((benefit, idx) => (
                         <li key={idx} className="flex items-start">
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 bg-${style.color}-100 text-${style.color}-600`}>
+                          <div 
+                            className="w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0"
+                            style={{ backgroundColor: `${style.color}20`, color: style.color }}
+                          >
                             <CreativeCheckCircle className="h-4 w-4" />
                           </div>
                           <span className="text-gray-700">{benefit}</span>
@@ -800,7 +793,10 @@ export default function App() {
                             animate={{ rotate: activeFaq === idx ? 180 : 0 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <CreativeChevronDown className={`h-6 w-6 ${activeFaq === idx ? `text-${style.color}-500` : 'text-gray-500'}`} />
+                            <CreativeChevronDown 
+                              className="h-6 w-6" 
+                              style={{ color: activeFaq === idx ? style.color : '#6b7280' }}
+                            />
                           </motion.div>
                         </button>
                         <motion.div
