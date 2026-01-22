@@ -1,52 +1,35 @@
 # Rhythm Lab - Танцевальная студия
 
-React приложение для сайта танцевальной студии Rhythm Lab.
+Лендинг для танцевальной студии "Rhythm Lab" на React + Vite.
 
-## Запуск проекта
-
-### Требования
-- Node.js (версия 18 или выше)
-- npm или yarn
-
-### Установка зависимостей
+## Быстрый старт
 
 ```bash
 npm install
-```
-
-### Запуск в режиме разработки
-
-```bash
 npm run dev
 ```
 
-После запуска проект будет доступен по адресу: http://localhost:5173
+Проект доступен по адресу: http://localhost:5173
 
-### Сборка для продакшена
+## Команды
 
-```bash
-npm run build
-```
+| Команда | Описание |
+|---------|----------|
+| `npm run dev` | Запуск в режиме разработки |
+| `npm run build` | Сборка для продакшена |
+| `npm run preview` | Просмотр собранной версии |
 
-### Просмотр продакшен сборки
+## Структура
 
-```bash
-npm run preview
-```
-
-## Структура проекта
-
-- `site.js` - основной React компонент приложения
-- `main.jsx` - точка входа приложения
+- `site.jsx` - основной React компонент
+- `main.jsx` - точка входа
 - `index.html` - HTML шаблон
-- `index.css` - глобальные стили с Tailwind CSS
-- `vite.config.js` - конфигурация Vite
-- `tailwind.config.js` - конфигурация Tailwind CSS
+- `index.css` - стили (Tailwind CSS)
 
-## Используемые технологии
+## Технологии
 
 - React 18
-- Framer Motion (анимации)
-- Tailwind CSS (стилизация)
-- Vite (сборщик)
+- Vite
+- Tailwind CSS
+- Framer Motion
 
